@@ -9,14 +9,9 @@ Tools Used:
 This prototype shows the basics of autorization, 
 combined with authentication and tokens.
 
-This link is only accessible for user with the role : __admin__
+Following link Contains a webpage with login and a post and delete request
 ```
-http://localhost:4711/Authorisatie_Test/rest/cursus/admin
+http://localhost:4711/Authorisatie_Test/
 ```
-This link is always accessible, even when not logged in:
-
-`
-http://localhost:4711/Authorisatie_Test/rest/cursus/altijd
-`
 
 

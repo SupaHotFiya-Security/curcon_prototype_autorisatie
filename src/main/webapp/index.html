@@ -1,1 +1,126 @@
-hello index.html..
+<html>
+<link rel="stylesheet" type="text/css" href="landen.css">
+<script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
+<title>Cursussen</title>
+<body>
+
+	<div id="forms">
+
+		<form id="postForm">
+			<input type="text" placeholder="id" id="id" name="id" />
+			<input type="text" placeholder="naam" id="naam" name="naam" />
+			<input type="text" placeholder="beschrijving"  name="beschrijving" /> 
+		  <input type="button" id="post" value="Post!(student)" />
+		</form>
+
+		<form id="deleteForm">
+			<input type="text" placeholder="id" name="id" />
+			<input type="button" id="delete" value="Delete!(admin)" />
+		</form>
+		
+		
+		
+
+		<!-- INLOG FORM  -->
+		<form id="Loginform">
+			<input type="text" placeholder="Username" id="username" name="username" /> 
+			<input type="password" placeholder="Password" id="password" name="password" />
+		  <input type="button" id="login_button" value="Login" />
+		  <div id="response"></div>
+		</form>
+		<!-- INLOG FORM  -->
+		</div>
+		
+		 <input type="button" id="loadbutton" value="laadcurssusen(student+admin)" />
+		<table id="cursussen" style="overflow-x: auto;">
+			<tr>
+			<th>Id</th>
+				<th>Naam</th>
+				<th>Beschrijving</th>
+			</tr>
+		</table>
+
+
+	<script>
+		$("#loadbutton").click(function() {
+			$.ajax( {	
+				url : "rest/cursus/" ,
+				type : "get",
+				beforeSend: function (xhr) {
+			        var token = window.sessionStorage.getItem("sessionToken");
+			        xhr.setRequestHeader( 'Authorization', 'Bearer ' + token);    
+			        },
+				success : function(response) {
+					$.each(response, function(i, cursus) {
+						$("#cursussen").append(
+								"<tr><td>" + cursus.id + "</td><td>"
+								+ cursus.naam + "</td><td>"
+										+ cursus.beschrijving + "</td>"
+										+ "</tr>");
+					});
+					$("#response").text("Landen opgehaald");
+					
+				},
+				error : function(response) {
+					$("#response").text("Kon land niet ophalen!");
+				}
+			});			
+		});
+	</script>
+
+	<script>
+		$("#post").click(function() {
+			$.ajax( {	
+				url : "rest/cursus",
+				type : "post",
+				data: $("#postForm").serialize() ,
+				beforeSend: function (xhr) {
+			        var token = window.sessionStorage.getItem("sessionToken");
+			        xhr.setRequestHeader( 'Authorization', 'Bearer ' + token);    
+			        },
+				success : function(response) {
+					$("#response").text("cursus gepost!"+response);
+				},
+				error : function(response) {
+					$("#response").text("Kon cursus niet posten!");
+				}
+			});
+		});
+		
+		$("#delete").click(function() {
+			$.ajax( {	
+				url : "rest/cursus",
+				type : "delete",
+				data: $("#deleteForm").serialize() ,
+				beforeSend: function (xhr) {
+			        var token = window.sessionStorage.getItem("sessionToken");
+			        xhr.setRequestHeader( 'Authorization', 'Bearer ' + token);    
+			        },
+				success : function(response) {
+					$("#response").text("cursus gedelete!");
+				},
+				error : function(response) {
+					$("#response").text("Kon cursus niet deleten!");
+				}
+			});
+		});		
+	
+		$("#login_button").click(
+				function() {
+					var data = $("#Loginform").serialize();
+					$.post(
+							url="rest/authentication",
+							data,
+							function(response) {
+								$("#response").text("Inlogd!");
+								window.sessionStorage.setItem("sessionToken",
+										(response));
+							}).fail(function(jqXHR, textStatus, errorThrown) {
+						$("#response").text("kon niet inloggen..!");
+						console.log(textStatus);
+						console.log(errorThrown);
+					});
+				});
+	</script>
+</body>
+</html>

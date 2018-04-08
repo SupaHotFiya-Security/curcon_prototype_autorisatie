@@ -5,7 +5,7 @@ import java.sql.*;
 public class UserDAO extends BaseDAO {
 	public String findRoleForUsernameAndPassword(String username, String password) {
 		String role = null;
-		String query = "SELECT role FROM useraccount WHERE username = ? AND password = ?";
+		String query = "SELECT role FROM accounts WHERE username = ? AND password = ?";
 
 		try (Connection con = super.getConnection()) {
 

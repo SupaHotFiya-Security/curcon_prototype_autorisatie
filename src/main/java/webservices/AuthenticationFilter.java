@@ -25,6 +25,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 		// Check if the HTTP Authorization header is present and formatted
 		// correctly
 		String authHeader = requestCtx.getHeaderString(HttpHeaders.AUTHORIZATION);
+		System.out.println(authHeader+"44");
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			// Extract the token from the HTTP Authorization header
 			String token = authHeader.substring("Bearer".length()).trim();
@@ -40,7 +41,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 				System.out.println("Invalid JWT, processing as guest!");
 			}
 		}
-		System.out.println(msc);
+		System.out.println(msc+"43");
 		requestCtx.setSecurityContext(msc);
 	}
 }

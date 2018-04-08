@@ -11,6 +11,7 @@ public class MySecurityContext implements SecurityContext {
 	public MySecurityContext(String name, String role, boolean isSecure) {
 		this.name = name;
 		this.role = role;
+		this.isSecure = isSecure;
 	}
 
 	public Principal getUserPrincipal() {

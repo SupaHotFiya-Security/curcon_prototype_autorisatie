@@ -13,6 +13,10 @@ public class Cursus {
 		this.beschrijving = beschrijving;
 	}
 	
+	public Cursus(int id) {
+		this.id = id;
+	}
+
 	public int getId() {
 		return id;
 	}

@@ -7,10 +7,14 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
-
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import model.Cursus;
 import model.CursusService;
@@ -33,27 +37,42 @@ public class CursusResource {
 		return jsonArrayBuilder.build();
 	}
 
-	@Path("/altijd")
 	@GET
-	//@RolesAllowed({"admin","student"})
+	@RolesAllowed({ "admin","student" })
 	@Produces("application/json")
-	public String getCustomers() {
+	public String getcursussen() {
 		CursusService service = ServiceProvider.getCursusService();
 		JsonArray cursusArray = buildJsonArray(service.getAllCursussen());
+		return cursusArray.toString();
+	}
 
-		return cursusArray.toString();
-	}
-	
-	@Path("/admin")
-	@GET
-	@RolesAllowed({"admin"})
+
+	@POST
+	@RolesAllowed({ "student" })
 	@Produces("application/json")
-	public String getCustomerss() {
+	public Response postcursus(@FormParam("id") int id, @FormParam("naam") String naam,
+			@FormParam("beschrijving") String beschrijving) {
+		Cursus newCursus = new Cursus(id, naam, beschrijving);
 		CursusService service = ServiceProvider.getCursusService();
-		JsonArray cursusArray = buildJsonArray(service.getAllCursussen());
-		return cursusArray.toString();
+
+		if (service.addCursus(newCursus)) {
+			return Response.ok().build();
+		} else {
+			return Response.status(Status.NOT_FOUND).build();
+		}
 	}
-	
-	
+	@DELETE
+	@RolesAllowed({ "admin" })
+	@Produces("application/json")
+	public Response deletecursus(@FormParam("id")int id) {
+		Cursus c = new Cursus(id);
+		CursusService service = ServiceProvider.getCursusService();
+
+		if (service.deleteCursus(c)) {
+			return Response.ok().build();
+		} else {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+	}
 
 }
