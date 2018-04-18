@@ -38,7 +38,8 @@ public class CursusResource {
 	}
 
 	@GET
-	@RolesAllowed({ "admin","student" })
+	//@RolesAllowed({ "admin","student" })
+	@Path("/all")
 	@Produces("application/json")
 	public String getcursussen() {
 		CursusService service = ServiceProvider.getCursusService();
