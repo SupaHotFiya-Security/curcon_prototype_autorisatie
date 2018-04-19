@@ -1,0 +1,135 @@
+<html>
+<body>
+	<input type="submit" value="Google" onclick="loginGoogle()">
+	<input type="submit" value="SignOut" onclick="signOut()">
+	<label id="state"></label>
+<!-- 	<input type="submit" value="signupMail" onclick="signupmail()">
+	<input type="submit" value="loginMail" onclick="loginmail()"> -->
+	<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+	<script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
+
+	<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDAz-54nADS2Mr0pNOca0zo-DlULwa6lG0",
+    authDomain: "curconhu.firebaseapp.com",
+    databaseURL: "https://curconhu.firebaseio.com",
+    projectId: "curconhu",
+    storageBucket: "curconhu.appspot.com",
+    messagingSenderId: "442128035861"
+  };
+  firebase.initializeApp(config);
+  
+  function loginGoogle(){
+	  var provider = new firebase.auth.GoogleAuthProvider();
+	  firebase.auth().signInWithPopup(provider).then(function(result) {
+		  // This gives you a Google Access Token. You can use it to access the Google API.
+		  var token = result.credential.accessToken;
+		  // The signed-in user info.
+		  var user = result.user;
+		  var email = user.email;
+		 // console.log(user);
+		
+		  // ...
+		}).catch(function(error) {
+		  // Handle Errors here.
+		  var errorCode = error.code;
+		  var errorMessage = error.message;
+		  // The email of the user's account used.
+		  var email = error.email;
+		  // The firebase.auth.AuthCredential type that was used.
+		  var credential = error.credential;
+		  // ...
+		  console.log(errorCode+"\n"+errorMessage+"\n"+email+"\n"+credential)
+		});
+	  }
+  
+  //Gets the logged in users role in response
+  function getrole(email){
+		//console.log(email);
+			$.ajax( {	
+				url : "rest/authentication/"+email,
+				type : "get",
+				//data: $("#postForm").serialize() ,
+				
+				success : function(response) {
+					console.log("userrole is: "+response);
+				},
+				error : function(response) {
+					console.log("Kon user role niet ophalen!");
+				}
+			});
+			//console.log(email);
+		};
+		
+
+		//When User logs in or logs out this gets triggered
+		firebase.auth().onAuthStateChanged(function(user) {
+			  if (user) {
+			    // User is signed in.
+			    var displayName = user.displayName;
+			    var email = user.email;
+			    var emailVerified = user.emailVerified;
+			    var photoURL = user.photoURL;
+			    var isAnonymous = user.isAnonymous;
+			    var uid = user.uid;
+			    var providerData = user.providerData;
+			    // ...
+			    console.log("Signed in user is:"+displayName);
+			    console.log(user);
+			    document.getElementById('state').innerHTML = user.email;
+			    getrole(email);
+			  } else {
+			    // User is signed out.
+			    // ...
+			    document.getElementById('state').innerHTML = "Signed out"
+			    console.log("Signed out");
+			  }
+			});
+		
+
+function signOut(){
+		firebase.auth().signOut().then(function() {
+			  // Sign-out successful.
+			console.log("Signed out with function succes");
+			}).catch(function(error) {
+			  // An error happened.
+				 console.log("Signed out with function fail");
+			});
+}
+		
+</script>
+<!--	<script>
+function signupmail(){
+	//NOTE Currently not supported in the firebase console
+	var email = "hardcodedmail@live.nl"
+	var password ="hardcodedpassword"
+	console.log(email);
+	firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+		  // Handle Errors here.
+		  var errorCode = error.code;
+		  var errorMessage = error.message;
+		  console.log(errorMessage);
+		  // ...
+		});
+}
+
+
+function loginmail(){
+	//NOTE Currently not supported in the firebase console
+	email="hardcodedmail@live.nl"
+	password="hardcodedpasswordwrong"
+	firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+		  // Handle Errors here.
+		  var errorCode = error.code;
+		  var errorMessage = error.message;
+		  // ...
+		  console.log(errorMessage);
+		});
+	
+}
+</script>  -->
+
+
+</body>
+</html>
