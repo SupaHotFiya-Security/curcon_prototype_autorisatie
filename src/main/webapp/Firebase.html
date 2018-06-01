@@ -5,6 +5,7 @@
 	<label id="state"></label>
 <!-- 	<input type="submit" value="signupMail" onclick="signupmail()">
 	<input type="submit" value="loginMail" onclick="loginmail()"> -->
+	<input type="submit" value= "Validateinbackend"onclick="validateBackend()">
 	<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
 	<script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
 
@@ -25,6 +26,8 @@
 	  firebase.auth().signInWithPopup(provider).then(function(result) {
 		  // This gives you a Google Access Token. You can use it to access the Google API.
 		  var token = result.credential.accessToken;
+		  console.log("2");
+		  console.log(token);
 		  // The signed-in user info.
 		  var user = result.user;
 		  var email = user.email;
@@ -65,6 +68,7 @@
 
 		//When User logs in or logs out this gets triggered
 		firebase.auth().onAuthStateChanged(function(user) {
+			//User is returned
 			  if (user) {
 			    // User is signed in.
 			    var displayName = user.displayName;
@@ -97,7 +101,34 @@ function signOut(){
 				 console.log("Signed out with function fail");
 			});
 }
-		
+
+function validateBackend(){
+firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) {
+	  // Send token to your backend via HTTPS
+	  console.log("Sending token to backend");
+	  console.log(idToken);
+	  getTokenUser(idToken);
+	  // ...
+	}).catch(function(error) {
+	  // Handle error
+	});
+}
+function getTokenUser(idToken){
+	//console.log(email);
+		$.ajax( {	
+			url : "rest/authentication/token/"+idToken,
+			type : "get",
+			//data: $("#postForm").serialize() ,
+			
+			success : function(response) {
+				console.log("username out of token is: "+response);
+			},
+			error : function(response) {
+				console.log("Kon user token niet decrypten..!");
+			}
+		});
+		//console.log(email);
+	};
 </script>
 <!--	<script>
 function signupmail(){
