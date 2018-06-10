@@ -16,6 +16,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+//import javax.ws.rs.param
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -29,7 +30,9 @@ import com.google.firebase.auth.FirebaseToken;
 //import io.jsonwebtoken.impl.crypto.MacProvider;
 import persistence.UserDAO;
 //import FirebaseInit;
-
+//TODO 
+//TODO DEZE KLASSE WORDT ALLEEN VOOR TESTEN GEBRUIKT EN KAN VERWIJDERD WORDEN
+//TODO
 @Path("/authentication")
 public class AuthenticationResource {
 	//
@@ -56,12 +59,19 @@ public class AuthenticationResource {
 	@Path("/token/{token}")
 	@Produces({ MediaType.TEXT_PLAIN })
 	public String DecodeToken(@PathParam("token") String idToken) throws FirebaseAuthException, IOException {
+		
+		//TODO
+		//MySecurityContext msc = new MySecurityContext("Unknown");
 		//FIXME Deze INIT moet maar 1x gebeuren terwijl de applicatie runt.
 		FirebaseInit init = new FirebaseInit();
-	
-		
+
 		FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
+	
 		String uid = decodedToken.getUid();
+		String user = decodedToken.getEmail();
+		//msc = new MySecurityContext(user);
+		//TODO hierboven naar filter
+	 //FirebaseInit.FirebaseCheck("functie");
 		
 		return decodedToken.getEmail();
 

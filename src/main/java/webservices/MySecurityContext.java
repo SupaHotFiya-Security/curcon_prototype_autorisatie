@@ -17,7 +17,7 @@ public class MySecurityContext implements SecurityContext {
 	public Principal getUserPrincipal() {
 		return new Principal() {
 			public String getName() {
-				return name;
+				return name; 
 			}
 		};
 	}
